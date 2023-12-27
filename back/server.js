@@ -3,25 +3,28 @@ import dotenv from "dotenv";
 import bp from "body-parser";
 import { pool } from "./db.js";
 dotenv.config();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8003;
 const app = express();
 app.use(bp.json());
 app.listen(PORT, (req, res) => {
   console.log(`ON, ${PORT}`);
 });
-app.get("/user", async (req, res) => {
+app.get("/users", async (req, res) => {
   try {
-    const queryText = `SELECLT * FROM users`;
+    const queryText = `SELECT * FROM users`;
     const response = await pool.query(queryText);
+
     res.send(response.rows);
   } catch (error) {
     console.error(error);
   }
 });
-app.get("/users", async (req, res) => {
-  const { name, email } = req.body;
+app.get("/user", async (req, res) => {
+  const { id, name, email } = req.body;
   try {
-    const queryText = `SELECT * FROM users WHERE name='${name} AND email='${email}`;
+    const queryText = `
+      SELECT * FROM users WHERE  id='${id}' OR (name='${name}' AND id != '${id}') OR (email='${email}' AND id != '${id}')
+    `;
     const response = await pool.query(queryText);
     res.send(response.rows);
   } catch (error) {
@@ -31,18 +34,20 @@ app.get("/users", async (req, res) => {
 app.post("/createTable", async (_, res) => {
   try {
     const tableQueryText = `
-        CREATE TABLE IF NOT EXIST users (
-            id SERIAL PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            email VARCHAR(255) NOT NULL,
-        )`;
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL
+      )`;
+    await pool.query(tableQueryText);
+    res.send("Table created successfully");
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    res.send("Error creating table");
   }
 });
 app.post("/user", async (req, response) => {
   const { name, email } = req.body;
-  console.log(name, email, "req.body");
   try {
     const queryText =
       "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *";
