@@ -58,3 +58,27 @@ app.post("/user", async (req, response) => {
     response.send("error query");
   }
 });
+app.delete("/user", async (req, response) => {
+  const { name, email, id } = req.body;
+
+  try {
+    const queryText = `DELETE FROM users WHERE (name = '${name}' AND email = '${email}') OR id = '${id}'`;
+    await pool.query(queryText);
+    response.send("ok");
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.put("/user", async (req, response) => {
+  const { name, email, id } = req.body;
+
+  try {
+    const queryText = `UPDATE users SET name = '${name}', email = '${email}' WHERE id = '${id}'`;
+    await pool.query(queryText);
+    response.send("updated");
+  } catch (error) {
+    response.send("error").end();
+    console.error(error);
+  }
+});
