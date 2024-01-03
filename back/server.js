@@ -2,42 +2,36 @@ import express from "express";
 import dotenv from "dotenv";
 import bp from "body-parser";
 import { pool } from "./db.js";
+import { user } from "./router/user.js";
 dotenv.config();
 const PORT = process.env.PORT || 8003;
 const app = express();
 app.use(bp.json());
+app.use('/users',user)
 app.listen(PORT, (req, res) => {
   console.log(`ON, ${PORT}`);
 });
-app.get("/users", async (req, res) => {
-  try {
-    const queryText = `SELECT * FROM users`;
-    const response = await pool.query(queryText);
 
-    res.send(response.rows);
-  } catch (error) {
-    console.error(error);
-  }
-});
-app.get("/user", async (req, res) => {
-  const { id, name, email } = req.body;
-  try {
-    const queryText = `
-      SELECT * FROM users WHERE  id='${id}' OR (name='${name}' AND id != '${id}') OR (email='${email}' AND id != '${id}')
-    `;
-    const response = await pool.query(queryText);
-    res.send(response.rows);
-  } catch (error) {
-    console.error(error);
+const enableUuidOsspExtensionQuery = 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"';
+pool.query(enableUuidOsspExtensionQuery, (err, result) => {
+  if (err) {
+    console.error('Error enabling uuid-ossp extension:', err);
+  } else {
+    console.log('uuid-ossp extension enabled');
   }
 });
 app.post("/createTable", async (_, res) => {
   try {
     const tableQueryText = `
       CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
+        id uuid PRIMARY KEY DEFAULT uuid_generate_v4() ,
         name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL
+        email VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        avatarimg BYTEA,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        currency_type VARCHAR(50)
       )`;
     await pool.query(tableQueryText);
     res.send("Table created successfully");
@@ -46,39 +40,58 @@ app.post("/createTable", async (_, res) => {
     res.send("Error creating table");
   }
 });
-app.post("/user", async (req, response) => {
-  const { name, email } = req.body;
+app.post("/createCategoryTable", async (_, res) => {
   try {
-    const queryText =
-      "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *";
-    const res = await pool.query(queryText, [name, email]);
-    response.send(res.rows[0]);
+    const categoryTableQueryText = `
+      CREATE TABLE IF NOT EXISTS category (
+        id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        category_img TEXT
+      )`;
+    await pool.query(categoryTableQueryText);
+    res.send("Category table created successfully");
   } catch (error) {
     console.error(error);
-    response.send("error query");
+    res.send("Error creating category table");
   }
 });
-app.delete("/user", async (req, response) => {
-  const { name, email, id } = req.body;
-
+app.post("/createTransactionTable", async (_, res) => {
   try {
-    const queryText = `DELETE FROM users WHERE (name = '${name}' AND email = '${email}') OR id = '${id}'`;
-    await pool.query(queryText);
-    response.send("ok");
+    const transactionTableQueryText = `
+      CREATE TABLE IF NOT EXISTS transactions (
+        id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+        user_id uuid FOREIGN KEY,
+        name VARCHAR(255) NOT NULL,
+        amount REAL NOT NULL,
+        transaction_type ENUM("INC","EXP"),
+        description TEXT,
+        category_id uuid  FOREIGN KEY,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      )`;
+    await pool.query(transactionTableQueryText);
+    res.send("Transaction table created successfully");
   } catch (error) {
     console.error(error);
+    res.send("Error creating transaction table");
   }
 });
+;
 
-app.put("/user", async (req, response) => {
-  const { name, email, id } = req.body;
-
+app.post("/deleteTable", async (_, res) => {
   try {
-    const queryText = `UPDATE users SET name = '${name}', email = '${email}' WHERE id = '${id}'`;
-    await pool.query(queryText);
-    response.send("updated");
+    const deleteTableQuery = "DROP TABLE IF EXISTS users";
+    await pool.query(deleteTableQuery);
+    res.send("Table deleted successfully");
   } catch (error) {
-    response.send("error").end();
     console.error(error);
+    res.send("Error deleting table");
   }
 });
+
+
+
+
