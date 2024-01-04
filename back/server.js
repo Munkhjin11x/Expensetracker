@@ -3,15 +3,16 @@ import dotenv from "dotenv";
 import bp from "body-parser";
 import { pool } from "./db.js";
 import { user } from "./router/user.js";
+import cors from "cors"
 dotenv.config();
 const PORT = process.env.PORT || 8003;
 const app = express();
 app.use(bp.json());
+app.use(cors())
 app.use('/users',user)
 app.listen(PORT, (req, res) => {
   console.log(`ON, ${PORT}`);
 });
-
 const enableUuidOsspExtensionQuery = 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"';
 pool.query(enableUuidOsspExtensionQuery, (err, result) => {
   if (err) {
@@ -61,17 +62,17 @@ app.post("/createCategoryTable", async (_, res) => {
 app.post("/createTransactionTable", async (_, res) => {
   try {
     const transactionTableQueryText = `
-      CREATE TABLE IF NOT EXISTS transactions (
+    CREATE TABLE IF NOT EXISTS transactions (
         id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-        user_id uuid FOREIGN KEY,
+        user_id uuid REFERENCES users(id),
         name VARCHAR(255) NOT NULL,
         amount REAL NOT NULL,
-        transaction_type ENUM("INC","EXP"),
+        transaction_type ENUM("INC", "EXP"),
         description TEXT,
-        category_id uuid  FOREIGN KEY,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      )`;
+        category_id uuid REFERENCES categories(id)
+    )`;
     await pool.query(transactionTableQueryText);
     res.send("Transaction table created successfully");
   } catch (error) {
@@ -79,8 +80,6 @@ app.post("/createTransactionTable", async (_, res) => {
     res.send("Error creating transaction table");
   }
 });
-;
-
 app.post("/deleteTable", async (_, res) => {
   try {
     const deleteTableQuery = "DROP TABLE IF EXISTS users";

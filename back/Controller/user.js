@@ -24,7 +24,7 @@ const createUser = async (req, res) => {
     const { name, email ,password } = req.body;
     try {
         const queryText = "INSERT INTO users (name, email, password) VALUES ($1, $2 ,$3) RETURNING *";
-        const result = await pool.query(queryText, [name, email , password]);
+        const result = await pool.query(queryText, [name, email ,password]);
         res.send(result.rows[0]);
     } catch (error) {
         console.error(error);
