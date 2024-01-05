@@ -21,10 +21,10 @@ const getOneUser = async (req, res) => {
     }
 };
 const createUser = async (req, res) => {
-    const { name, email ,password } = req.body;
+    const { name, email, password } = req.body;
     try {
         const queryText = "INSERT INTO users (name, email, password) VALUES ($1, $2 ,$3) RETURNING *";
-        const result = await pool.query(queryText, [name, email ,password]);
+        const result = await pool.query(queryText, [name, email, password]);
         res.send(result.rows[0]);
     } catch (error) {
         console.error(error);
@@ -51,4 +51,26 @@ const updateUser = async (req, res) => {
     }
 };
 
-export { getUsers, getOneUser,  createUser, deleteUser, updateUser };
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        console.log(req.body)
+        const queryText = `SELECT * FROM users WHERE email = '${email}'`;
+        const find = await pool.query(queryText);
+
+        if (!find) {
+            return res.send('cannot found this user')
+        }
+
+        if (find.rows[0].password != password) {
+            return res.send('username or password incorrect')
+        }
+
+
+        res.send('ok')
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export { getUsers, getOneUser, createUser, deleteUser, updateUser, loginUser };

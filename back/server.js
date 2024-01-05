@@ -27,7 +27,7 @@ app.post("/createTable", async (_, res) => {
       CREATE TABLE IF NOT EXISTS users (
         id uuid PRIMARY KEY DEFAULT uuid_generate_v4() ,
         name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE,
         password VARCHAR(255) NOT NULL,
         avatarimg BYTEA,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -1,23 +1,32 @@
 'use client'
-import  { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-const hi = async ()=>{
-  console.log(await axios.get("http://localhost:8003/users"));
-}
-hi()
+import { useRouter } from 'next/navigation';
 
-const Login = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  useEffect(() => {
+
+    const isUserSignedUp = true;
+    if (!isUserSignedUp) {
+      router.push('/signup');
+    }
+  }, []);
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:8003/users', { email, password });
-      console.log(response.data); 
+      const response = await axios.post('https://localhost:8003/users/users/auth', { email, password });
+      console.log(response.data);
+      router.push('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
+      // alert('mail esvel pass buru bn ');
     }
   };
+
   return (
     <div>
       <h2>Login</h2>
@@ -38,4 +47,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
