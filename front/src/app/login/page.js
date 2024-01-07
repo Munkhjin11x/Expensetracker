@@ -14,15 +14,16 @@ const LoginPage = () => {
         email,
         password,
       });
+      console.log(response.data);
       if (response.data === "OK") {
-        router.push("/signup");
+        router.push("/");
       } else {
         console.log("Login failed:", response.data);
         alert("Invalid email or password");
       }
     } catch (error) {
       console.error("Login error:", error);
-      // alert("An error occurred during login");
+      console.log(response.data);
     }
   };
 
