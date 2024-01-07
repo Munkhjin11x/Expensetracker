@@ -3,22 +3,23 @@ import dotenv from "dotenv";
 import bp from "body-parser";
 import { pool } from "./db.js";
 import { user } from "./router/user.js";
-import cors from "cors"
+import cors from "cors";
 dotenv.config();
 const PORT = process.env.PORT || 8003;
 const app = express();
 app.use(bp.json());
-app.use(cors())
-app.use('/users',user)
+app.use(cors());
+app.use("/users", user);
 app.listen(PORT, (req, res) => {
   console.log(`ON, ${PORT}`);
 });
-const enableUuidOsspExtensionQuery = 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"';
+const enableUuidOsspExtensionQuery =
+  'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"';
 pool.query(enableUuidOsspExtensionQuery, (err, result) => {
   if (err) {
-    console.error('Error enabling uuid-ossp extension:', err);
+    console.error("Error enabling uuid-ossp extension:", err);
   } else {
-    console.log('uuid-ossp extension enabled');
+    console.log("uuid-ossp extension enabled");
   }
 });
 app.post("/createTable", async (_, res) => {
@@ -90,7 +91,3 @@ app.post("/deleteTable", async (_, res) => {
     res.send("Error deleting table");
   }
 });
-
-
-
-

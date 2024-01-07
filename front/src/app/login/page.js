@@ -1,29 +1,28 @@
-'use client'
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
-
-  useEffect(() => {
-
-    const isUserSignedUp = true;
-    if (!isUserSignedUp) {
-      router.push('/signup');
-    }
-  }, []);
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('https://localhost:8003/users/users/auth', { email, password });
-      console.log(response.data);
-      router.push('/dashboard');
+      const response = await axios.post("https://localhost:8003/users/auth", {
+        email,
+        password,
+      });
+      if (response.data === "OK") {
+        router.push("/signup");
+      } else {
+        console.log("Login failed:", response.data);
+        alert("Invalid email or password");
+      }
     } catch (error) {
-      console.error('Login error:', error);
-      // alert('mail esvel pass buru bn ');
+      console.error("Login error:", error);
+      // alert("An error occurred during login");
     }
   };
 
