@@ -21,7 +21,7 @@ const getOneUser = async (req, res) => {
   }
 };
 const createUser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password , currency_type } = req.body;
     try {
       const emailExistsQuery = "SELECT * FROM users WHERE email = $1";
       const emailExistsResult = await pool.query(emailExistsQuery, [email]);
@@ -29,8 +29,8 @@ const createUser = async (req, res) => {
         return res.status(409).json({ error: "Email already exists" });
       }
      const insertQuery =
-        "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *";
-      const result = await pool.query(insertQuery, [name, email, password]);
+        "INSERT INTO users (name, email, password ,currency_type) VALUES ($1, $2, $3, $4) RETURNING *";
+      const result = await pool.query(insertQuery, [name, email, password ,currency_type]);
       res.status(201).json(result.rows[0]);
     } catch (error) {
       console.error(error);
@@ -49,15 +49,19 @@ const deleteUser = async (req, res) => {
   }
 };
 const updateUser = async (req, res) => {
-  const { name, email, id } = req.body;
+  const { name, email, currency_type } = req.body;
   try {
-    const queryText = `UPDATE users SET name = '${name}', email = '${email}' WHERE id = '${id}'`;
-    await pool.query(queryText);
+    const queryText = 'UPDATE users SET name = $1, currency_type = $2 WHERE email = $3';
+    const queryParams = [name, currency_type, email];
+
+    await pool.query(queryText, queryParams);
     res.send("Updated");
   } catch (error) {
     console.error(error);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
