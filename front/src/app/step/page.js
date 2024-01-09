@@ -17,9 +17,6 @@ export default function Step() {
     console.log(storedEmail);
     setEmail(storedEmail);
   }, []);
-
-  console.log(currency_type);
-
   const handle = async () => {
     try {
       setLoading(true); 
