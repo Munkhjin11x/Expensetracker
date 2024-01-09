@@ -21,23 +21,23 @@ const getOneUser = async (req, res) => {
   }
 };
 const createUser = async (req, res) => {
-    const { name, email, password , currency_type } = req.body;
-    try {
-      const emailExistsQuery = "SELECT * FROM users WHERE email = $1";
-      const emailExistsResult = await pool.query(emailExistsQuery, [email]);
-      if (emailExistsResult.rows.length > 0) {
-        return res.status(409).json({ error: "Email already exists" });
-      }
-     const insertQuery =
-        "INSERT INTO users (name, email, password ,currency_type) VALUES ($1, $2, $3, $4) RETURNING *";
-      const result = await pool.query(insertQuery, [name, email, password ,currency_type]);
-      res.status(201).json(result.rows[0]);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json(error);
+  const { name, email, password, currency_type } = req.body;
+  try {
+    const emailExistsQuery = "SELECT * FROM users WHERE email = $1";
+    const emailExistsResult = await pool.query(emailExistsQuery, [email]);
+    if (emailExistsResult.rows.length > 0) {
+      return res.status(409).json({ error: "Email already exists" });
     }
-  };
-  
+    const insertQuery =
+      "INSERT INTO users (name, email, password ,currency_type) VALUES ($1, $2, $3, $4) RETURNING *";
+    const result = await pool.query(insertQuery, [name, email, password, currency_type]);
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
+};
+
 const deleteUser = async (req, res) => {
   const { name, email, id } = req.body;
   try {
@@ -49,20 +49,18 @@ const deleteUser = async (req, res) => {
   }
 };
 const updateUser = async (req, res) => {
-  const { name, email, currency_type } = req.body;
+  const {  email, currency_type } = req.body;
   try {
-    const queryText = 'UPDATE users SET name = $1, currency_type = $2 WHERE email = $3';
-    const queryParams = [name, currency_type, email];
+    const queryText = 'UPDATE users SET  currency_type = $1 WHERE email = $2';
+    const queryParams = [ currency_type, email];
 
-    await pool.query(queryText, queryParams);
-    res.send("Updated");
+    const result = await pool.query(queryText, queryParams);
+    res.send({ result: result.rows[0] }).end()
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
-
-
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -73,7 +71,6 @@ const loginUser = async (req, res) => {
     if (find.rows.length === 0) {
       return res.send("cannot found this user");
     }
-
     if (find.rows[0].password != password) {
       return res.send("username or password incorrect");
     }
