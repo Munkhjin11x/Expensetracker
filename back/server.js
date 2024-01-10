@@ -3,12 +3,14 @@ import dotenv from "dotenv";
 import bp from "body-parser";
 import { pool } from "./db.js";
 import { user } from "./router/user.js";
+import { transaction } from "./router/transaction.js";
 import cors from "cors";
 dotenv.config();
 const PORT = process.env.PORT || 8003;
 const app = express();
 app.use(bp.json());
 app.use(cors());
+app.use("/transactions", transaction);
 app.use("/users", user);
 app.listen(PORT, (req, res) => {
   console.log(`ON, ${PORT}`);
@@ -73,7 +75,7 @@ app.post("/createTransactionTable", async (_, res) => {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       category_id uuid REFERENCES category(id)
-  );`
+  );`;
     await pool.query(transactionTableQueryText);
     res.send("Transaction table created successfully");
   } catch (error) {

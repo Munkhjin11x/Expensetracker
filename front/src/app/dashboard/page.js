@@ -11,6 +11,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import RecordTab from '@/components/Record';
 
 
 const BarChart = () => {
@@ -24,21 +25,19 @@ const BarChart = () => {
         Tooltip,
         Legend
     );
-    // Sample data
+
     const data = {
         labels: ['January', 'February', 'March', 'April', 'May'],
         datasets: [
             {
                 label: 'Monthly Sales',
                 data: [50, 60, 70, 80, 90],
-                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Bar fill color
-                borderColor: 'rgba(75, 192, 192, 1)', // Bar border color
-                borderWidth: 1, // Bar border width
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)', 
+                borderWidth: 1,
             },
         ],
     };
-
-    // Chart configuration
     const options = {
         responsive: true,
         plugins: {
@@ -53,11 +52,12 @@ const BarChart = () => {
     };
 
     return (
-        <div>
+        <div className='px-[120px]'>
             <Navbar/>
             <h2>Monthly Sales Bar Chart</h2>
             <Bar data={data} options={options} />
             <Card/>
+            <RecordTab/>
         </div>
     );
 };

@@ -1,10 +1,9 @@
 import Vector from "../../public/img/Vector.png"
 import avatar from "../../public/img/PLaceholder.png"
-import { Bar } from 'react-chartjs-2';
 export default function Navbar(params) {
     
     return (
-        <nav className="flex justify-between  items-center px-[120px] box-border py-[16px]">
+        <nav className="flex justify-between  items-center box-border py-[16px]">
             <div className="flex gap-6 justify-center items-center">
             <img src={Vector.src}/>
             <p className=" text-[16px] font-semibold">Dashboard</p>
