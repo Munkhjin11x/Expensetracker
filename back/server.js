@@ -64,16 +64,16 @@ app.post("/createTransactionTable", async (_, res) => {
   try {
     const transactionTableQueryText = `
     CREATE TABLE IF NOT EXISTS transactions (
-        id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-        user_id uuid REFERENCES users(id),
-        name VARCHAR(255) NOT NULL,
-        amount REAL NOT NULL,
-        transaction_type ENUM("INC", "EXP"),
-        description TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        category_id uuid REFERENCES categories(id)
-    )`;
+      id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+      user_id uuid REFERENCES users(id),
+      name VARCHAR(255) NOT NULL,
+      amount REAL NOT NULL,
+      transaction_type VARCHAR(3) CHECK (transaction_type IN ('INC', 'EXP')),
+      description TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      category_id uuid REFERENCES category(id)
+  );`
     await pool.query(transactionTableQueryText);
     res.send("Transaction table created successfully");
   } catch (error) {
