@@ -5,6 +5,7 @@ import { pool } from "./db.js";
 import { user } from "./router/user.js";
 import { transaction } from "./router/transaction.js";
 import cors from "cors";
+import { categories } from "./router/category.js";
 dotenv.config();
 const PORT = process.env.PORT || 8003;
 const app = express();
@@ -12,6 +13,7 @@ app.use(bp.json());
 app.use(cors());
 app.use("/transactions", transaction);
 app.use("/users", user);
+app.use('/categories',categories)
 app.listen(PORT, (req, res) => {
   console.log(`ON, ${PORT}`);
 });
@@ -85,7 +87,7 @@ app.post("/createTransactionTable", async (_, res) => {
 });
 app.post("/deleteTable", async (_, res) => {
   try {
-    const deleteTableQuery = "DROP TABLE IF EXISTS users";
+    const deleteTableQuery = "DROP TABLE IF EXISTS category";
     await pool.query(deleteTableQuery);
     res.send("Table deleted successfully");
   } catch (error) {

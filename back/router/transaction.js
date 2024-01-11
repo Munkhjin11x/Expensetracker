@@ -4,7 +4,7 @@ import {
       createTransaction,
        deleteTransaction, 
        updateTransaction 
-} from "../Controller/transaction.js"
+} from "../controller/transaction.js"
 import express  from "express"
 import { user } from "./user.js";
 const transaction = express.Router()

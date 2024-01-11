@@ -6,7 +6,7 @@ import {
     getUsers,
     loginUser,
     updateUser,
-} from "../Controller/user.js"
+} from "../controller/user.js"
 const user = express.Router()
 user.route('/').get(getUsers).post(createUser);
 user.route('/user').get(getOneUser).delete(deleteUser).put(updateUser)
