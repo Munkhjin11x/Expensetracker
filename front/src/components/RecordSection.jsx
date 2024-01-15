@@ -35,6 +35,7 @@ export default function RecordADDcategory() {
     };
 
     return (
+        <div className='flex'>
         <div className="flex flex-col">
             <div className='flex flex-col gap-6'>
                 <h1>Records</h1>
@@ -118,8 +119,9 @@ export default function RecordADDcategory() {
                     />
                     <p>Selected Amount: {amountRange}</p>
                 </div>
-                <RecordTab />
             </div>
+        </div>
+                <RecordTab />
         </div>
     );
 }

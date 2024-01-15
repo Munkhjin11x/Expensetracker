@@ -1,4 +1,4 @@
-import { pool } from "../db.js";
+import { pool } from "../../db.js";
 const getUsers = async (req, res) => {
   try {
     const queryText = `SELECT * FROM users`;

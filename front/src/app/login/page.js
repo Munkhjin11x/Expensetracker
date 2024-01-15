@@ -1,8 +1,9 @@
 "use client";
-import Geld from '../../../public/img/geld.png';
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Geld from '../../../public/img/geld.png';
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -11,10 +12,6 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-  const pageSwitcher = () => {
-    router.push("/signup");
-  };
-
   const handleLogin = async () => {
     try {
       setLoading(true)
@@ -70,7 +67,9 @@ const LoginPage = () => {
 
           <div className='flex gap-3 mt-[40px]'>
             <p>Don't have an account?</p>
-            <p className=' text-blue-600 cursor-pointer' onClick={pageSwitcher}>Sign up</p>
+            <Link href='/signup'>
+            <p className=' text-blue-600 cursor-pointer' >Sign up</p>
+            </Link>
           </div>
         </div>
       </div>

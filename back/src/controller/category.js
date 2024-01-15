@@ -1,4 +1,4 @@
-import { pool } from "../db.js";
+import { pool } from "../../db.js";
 
 const getCategories = async (req, res) => {
   try {
@@ -7,7 +7,7 @@ const getCategories = async (req, res) => {
     res.json(response.rows);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -19,7 +19,7 @@ const getOneCategory = async (req, res) => {
     res.json(response.rows[0]);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -31,11 +31,15 @@ const createCategory = async (req, res) => {
       VALUES ($1, $2, $3)
       RETURNING *`;
 
-    const result = await pool.query(insertQuery, [name, description, category_img]);
+    const result = await pool.query(insertQuery, [
+      name,
+      description,
+      category_img,
+    ]);
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -47,7 +51,7 @@ const deleteCategory = async (req, res) => {
     res.send("OK");
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -61,12 +65,23 @@ const updateCategory = async (req, res) => {
       WHERE id = $4
       RETURNING *`;
 
-    const result = await pool.query(queryText, [name, description, category_img, id]);
+    const result = await pool.query(queryText, [
+      name,
+      description,
+      category_img,
+      id,
+    ]);
     res.json(result.rows[0]);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-export { getCategories, getOneCategory, createCategory, deleteCategory, updateCategory };
+export {
+  getCategories,
+  getOneCategory,
+  createCategory,
+  deleteCategory,
+  updateCategory,
+};

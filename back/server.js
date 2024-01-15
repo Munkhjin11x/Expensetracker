@@ -1,11 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import bp from "body-parser";
-import { pool } from "../db.js";
-import { user } from "./router/user.js";
-import { transaction } from "./router/transaction.js";
 import cors from "cors";
-import { categories } from "./router/category.js";
+import { pool } from "./db.js";
+import {user} from "../back/src/router/user.js"
+import { transaction } from "../back/src/router/transaction.js";
+import { categories } from "../back/src/router/category.js";
 dotenv.config();
 const PORT = process.env.PORT || 8003;
 const app = express();

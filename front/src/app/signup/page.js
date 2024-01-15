@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Geld from '../../../public/img/geld.png'
 
 const Signup = () => {
@@ -12,9 +13,6 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
-  const pageSwitcher = () => {
-    router.push("/login")
-  }
 
   const handleSignup = async () => {
     try {
@@ -84,7 +82,9 @@ const Signup = () => {
 
           <div className='flex gap-3 mt-[40px]'>
             <p>Already have account?</p>
-            <p onClick={pageSwitcher} className='text-blue-600 cursor-pointer'>Login</p>
+          <Link href='/login'>
+            <p className='text-blue-600 cursor-pointer'>Login</p>
+          </Link>
           </div>
         </div>
 
