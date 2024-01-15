@@ -11,12 +11,12 @@ export default function RecordTab() {
     const handleAddRecord = async () => {
       try {
         const response = await axios.post('http://localhost:8003/transactions', {
-          amount: isIncome ? amount : -amount,
-          transaction_type: isIncome ? 'INC' : 'EXP',
+          amount: setIsIncome ? amount : -amount,
+          transaction_type: setIsIncome ? 'INC' : 'EXP',
         });
   
         const newRecord = {
-          type: isIncome ? "Income" : "Expense",
+          transaction_type: isIncome ? "Income" : "Expense",
           time: new Date().toLocaleTimeString(),
           amount: isIncome ? `+${amount}` : `-${amount}`,
         };
@@ -46,7 +46,7 @@ export default function RecordTab() {
               <img className="w-[20px] h-[20px]" src={house.src} alt="House Icon" />
             </div>
             <div>
-              <p>{record.type}</p>
+              <p>{record.transaction_type}</p>
               <p>{record.time}</p>
             </div>
             <div>
