@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import bp from "body-parser";
-import { pool } from "./db.js";
+import { pool } from "../db.js";
 import { user } from "./router/user.js";
 import { transaction } from "./router/transaction.js";
 import cors from "cors";

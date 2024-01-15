@@ -11,7 +11,6 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-
   const pageSwitcher = () => {
     router.push("/signup");
   };
