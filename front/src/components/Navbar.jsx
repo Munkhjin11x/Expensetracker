@@ -4,7 +4,7 @@ import avatar from "../../public/img/PLaceholder.png"
 export default function Navbar(params) {
     
     return (
-        <nav className="flex justify-between  items-center box-border py-[16px]">
+        <nav className="flex justify-between  items-center box-border py-[16px] px-[120px] bg-white">
             <div className="flex gap-6 justify-center items-center">
             <img src={Vector.src}/>
             <p className=" text-[16px] font-semibold">Dashboard</p>
