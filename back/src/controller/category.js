@@ -1,13 +1,16 @@
 import { pool } from "../../db.js";
 
 const getCategories = async (req, res) => {
+  const userId = req.query.user_id
+  console.log(req.query)
+
   try {
-    const queryText = `SELECT * FROM category`;
-    const response = await pool.query(queryText);
+    const queryText = 'SELECT * FROM category WHERE user_id = $1';
+    const response = await pool.query(queryText, [userId]);
     res.json(response.rows);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -24,17 +27,18 @@ const getOneCategory = async (req, res) => {
 };
 
 const createCategory = async (req, res) => {
-  const { name, description, category_img } = req.body;
+  const { name, description, category_img, user_id } = req.body;
   try {
     const insertQuery = `
-      INSERT INTO category (name, description, category_img)
-      VALUES ($1, $2, $3)
+      INSERT INTO category (name, description, category_img , user_id)
+      VALUES ($1, $2, $3, $4)
       RETURNING *`;
 
     const result = await pool.query(insertQuery, [
       name,
       description,
       category_img,
+      user_id
     ]);
     res.status(201).json(result.rows[0]);
   } catch (error) {

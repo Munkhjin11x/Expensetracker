@@ -1,7 +1,7 @@
 "use client"
 import Navbar from '@/components/Navbar';
 import { Bar } from 'react-chartjs-2';
-import Card from '@/components/Card';
+import RecordTab from '@/components/Record';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -11,7 +11,6 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-import RecordTab from '@/components/Record';
 
 
 const BarChart = () => {
@@ -54,10 +53,9 @@ const BarChart = () => {
     return (
         <div className='px-[120px]'>
             <Navbar/>
+            <RecordTab/>
             <h2>Monthly Sales Bar Chart</h2>
             <Bar data={data} options={options} />
-            <Card/>
-            <RecordTab/>
         </div>
     );
 };

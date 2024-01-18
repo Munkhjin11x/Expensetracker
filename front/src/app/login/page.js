@@ -19,9 +19,11 @@ const LoginPage = () => {
         email,
         password,
       });
-
-      if (response.data === "ok") {
-        router.push(`/dashboard/${email}`);
+      const userData = response.data
+      if (userData && (userData.id || userData.email)) {
+        console.log(userData)
+        localStorage.setItem('user', JSON.stringify({...userData}))
+        router.push(`/dashboard//${userData.email}`);
       } else {
         console.log("Login failed:", response.data);
         setError("Invalid email or password");
@@ -68,7 +70,7 @@ const LoginPage = () => {
           <div className='flex gap-3 mt-[40px]'>
             <p>Don't have an account?</p>
             <Link href='/signup'>
-            <p className=' text-blue-600 cursor-pointer' >Sign up</p>
+              <p className=' text-blue-600 cursor-pointer' >Sign up</p>
             </Link>
           </div>
         </div>

@@ -51,6 +51,7 @@ app.post("/createCategoryTable", async (_, res) => {
     const categoryTableQueryText = `
       CREATE TABLE IF NOT EXISTS category (
         id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+        user_id uuid REFERENCES users(id),
         name VARCHAR(255) NOT NULL,
         description TEXT,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -87,7 +88,7 @@ app.post("/createTransactionTable", async (_, res) => {
 });
 app.post("/deleteTable", async (_, res) => {
   try {
-    const deleteTableQuery = "DROP TABLE IF EXISTS transactions";
+    const deleteTableQuery = "DROP TABLE IF EXISTS category";
     await pool.query(deleteTableQuery);
     res.send("Table deleted successfully");
   } catch (error) {

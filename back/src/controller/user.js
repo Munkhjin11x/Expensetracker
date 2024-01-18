@@ -49,10 +49,10 @@ const deleteUser = async (req, res) => {
   }
 };
 const updateUser = async (req, res) => {
-  const {  email, currency_type } = req.body;
+  const { email, currency_type } = req.body;
   try {
     const queryText = 'UPDATE users SET  currency_type = $1 WHERE email = $2';
-    const queryParams = [ currency_type, email];
+    const queryParams = [currency_type, email];
 
     const result = await pool.query(queryText, queryParams);
     res.send({ result: result.rows[0] }).end()
@@ -65,19 +65,21 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     console.log(req.body);
-    const queryText = `SELECT * FROM users WHERE email = '${email}'`;
-    const find = await pool.query(queryText);
-
+    const queryText = 'SELECT id, email, password FROM users WHERE email = $1';
+    const find = await pool.query(queryText, [email]);
     if (find.rows.length === 0) {
-      return res.send("cannot found this user");
-    }
-    if (find.rows[0].password != password) {
-      return res.send("username or password incorrect");
+      return res.status(401).send("Cannot find this user");
     }
 
-    res.send("ok");
+    const user = find.rows[0];
+
+    if (user.password !== password) {
+      return res.status(401).send("Username or password incorrect");
+    }
+    res.status(200).json({ ...user });
   } catch (error) {
     console.error(error);
+    res.status(500).send("Internal Server Error");
   }
 };
 

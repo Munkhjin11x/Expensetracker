@@ -8,23 +8,19 @@ export default function RecordPage() {
     useEffect(() => {
         fetchData();
     }, []);
-
     const fetchData = async () => {
         try {
             const response = await axios.get("http://localhost:8003/transactions");
             const fetchedRecords = response.data.map((transaction) => {
                 const transactionType =
                     transaction.transaction_type === "INC" ? "INC" : "EXP";
-    
                 return {
                     transaction_type: transactionType,
                     created_at: new Date(transaction.created_at).toLocaleString(),
                     amount:
-                        transactionType === "INC"
-                            ? `+${transaction.amount}`
-                            : `${transaction.amount}`,
+                        transactionType === "INC"   ? `+${transaction.amount}₮` : `${transaction.amount}₮`,
                     name: transaction.name,
-                    description: transaction.description, 
+                    description: transaction.description,  
                 };
             });
     
