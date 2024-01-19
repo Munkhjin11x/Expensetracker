@@ -41,6 +41,7 @@ export default function RecordADDcategory({ records, setRecords }) {
                 description: transactionDescription,
                 category_id: selectedCategory,
                 created_at: new Date().toISOString(),
+                user_id:userData.id
             });
             const newRecord = {
                 created_at: new Date().toLocaleString(),

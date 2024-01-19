@@ -5,12 +5,13 @@ import axios from "axios"
 import { useState, useEffect, Suspense } from "react";
 export default function RecordPage() {
     const [records, setRecords] = useState();
+    const userData = JSON.parse(localStorage.getItem('user'));
     useEffect(() => {
         fetchData();
     }, []);
     const fetchData = async () => {
         try {
-            const response = await axios.get("http://localhost:8003/transactions");
+            const response = await axios.get(`http://localhost:8003/transactions?user_id=${userData.id}`);
             const fetchedRecords = response.data.map((transaction) => {
                 const transactionType =
                     transaction.transaction_type === "INC" ? "INC" : "EXP";

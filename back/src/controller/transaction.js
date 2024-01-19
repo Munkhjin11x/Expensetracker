@@ -1,15 +1,23 @@
 import { pool } from "../../db.js";
 
 const getTransactions = async (req, res) => {
+  const userId = req.query.user_id;
+
   try {
-    const queryText = `SELECT * FROM transactions t INNER JOIN category c ON t.category_id = c.id`;
-    const response = await pool.query(queryText);
-    res.send(response.rows);
+    const queryText = `
+      SELECT t.*, c.xname
+      FROM transactions t
+      INNER JOIN category c ON t.category_id = c.id
+      WHERE c.user_id = $1
+    `;
+    const response = await pool.query(queryText, [userId]);
+    res.json(response.rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 const getOneTransaction = async (req, res) => {
   const { id } = req.params;
