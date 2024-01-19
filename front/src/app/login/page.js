@@ -23,7 +23,7 @@ const LoginPage = () => {
       if (userData && (userData.id || userData.email)) {
         console.log(userData)
         localStorage.setItem('user', JSON.stringify({...userData}))
-        router.push(`/dashboard//${userData.email}`);
+        router.push(`/dashboard/${userData.email}`);
       } else {
         console.log("Login failed:", response.data);
         setError("Invalid email or password");

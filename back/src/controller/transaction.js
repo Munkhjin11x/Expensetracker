@@ -5,7 +5,7 @@ const getTransactions = async (req, res) => {
 
   try {
     const queryText = `
-      SELECT t.*, c.xname
+      SELECT t.*, c.name
       FROM transactions t
       INNER JOIN category c ON t.category_id = c.id
       WHERE c.user_id = $1

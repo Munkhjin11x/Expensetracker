@@ -231,7 +231,7 @@ export default function RecordADDcategory({ records, setRecords }) {
                 </div>
             </div>
             <div>
-                <RecordTab categories={categories} records={records} />
+                <RecordTab  records={records} />
             </div>
         </div>
     );

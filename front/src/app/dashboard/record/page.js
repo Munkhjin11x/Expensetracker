@@ -5,6 +5,7 @@ import axios from "axios"
 import { useState, useEffect, Suspense } from "react";
 export default function RecordPage() {
     const [records, setRecords] = useState();
+    localStorage.setItem('transactions', JSON.stringify({...records}))
     const userData = JSON.parse(localStorage.getItem('user'));
     useEffect(() => {
         fetchData();
